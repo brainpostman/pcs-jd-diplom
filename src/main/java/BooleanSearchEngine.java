@@ -56,7 +56,7 @@ public class BooleanSearchEngine implements SearchEngine {
             result = wordIndex.get(word);
             Collections.sort(result);
         } else {
-            result = new ArrayList<>(List.of(new PageEntry("НЕ НАЙДЕНО ФАЙЛОВ PDF, СОДЕРЖАЩИХ СЛОВО: " + word, 0, 0)));
+            result = new ArrayList<>(List.of(new PageEntry("НЕТ СОВПАДЕНИЙ ПО СЛОВУ: " + word, 0, 0)));
         }
         return result;
     }
