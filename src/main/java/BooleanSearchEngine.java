@@ -51,7 +51,13 @@ public class BooleanSearchEngine implements SearchEngine {
 
     @Override
     public List<PageEntry> search(String word) {
-        Collections.sort(wordIndex.get(word.toLowerCase()));
-        return wordIndex.get(word).size() == 0 ? null : wordIndex.get(word);
+        List<PageEntry> result;
+        if (wordIndex.containsKey(word)) {
+            result = wordIndex.get(word);
+            Collections.sort(result);
+        } else {
+            result = new ArrayList<>(List.of(new PageEntry("НЕ НАЙДЕНО ФАЙЛОВ PDF, СОДЕРЖАЩИХ СЛОВО: " + word, 0, 0)));
+        }
+        return result;
     }
 }

@@ -14,18 +14,20 @@ public class Main {
         SimpleModule module = new SimpleModule();
         module.addSerializer(new PageEntrySerializer(PageEntry.class));
         ObjectMapper mapper = new ObjectMapper();
-        try (ServerSocket serverSocket = new ServerSocket(port);
-             Socket clientSocket = serverSocket.accept();
-             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-             FileWriter writer = new FileWriter("searchResult.json");
-             BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-            out.println("Введите слово:");
-            String word = in.readLine();
-            List<PageEntry> pageEntries = engine.search(word.trim());
-            String searchResult = mapper.registerModule(module)
-                    .writer(new DefaultPrettyPrinter())
-                    .writeValueAsString(pageEntries);
-            writer.write(searchResult);
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            while (true) {
+                try (Socket clientSocket = serverSocket.accept();
+                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                    out.println("Введите слово:");
+                    String word = in.readLine();
+                    List<PageEntry> pageEntries = engine.search(word.trim());
+                    String searchResult = mapper.registerModule(module)
+                            .writer(new DefaultPrettyPrinter())
+                            .writeValueAsString(pageEntries);
+                    out.println(searchResult);
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
